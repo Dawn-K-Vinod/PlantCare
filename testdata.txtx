@@ -1,0 +1,47 @@
+{
+    "name": "Tulsi",
+    "species": "Ocimum tenuiflorum",
+    "location": "Balcony",
+    "photo_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Tulsi_%28Ocimum_tenuiflorum%29.jpg/800px-Tulsi_%28Ocimum_tenuiflorum%29.jpg",
+    "tags": ["outdoor", "herb", "medicinal", "aromatic", "edible"],
+    "schedule": { "watering_every_days": 2 },
+    "care_log": [
+      { "type": "watering", "date": { "$date": "2025-04-03T08:00:00Z" }, "note": "" },
+      { "type": "fertilizing", "date": { "$date": "2025-03-25T08:00:00Z" }, "note": "" }
+    ],
+    "added_on": { "$date": "2025-03-23T08:00:00Z" }
+  },
+
+
+
+
+  {
+    "name": "Areca Palm",
+    "species": "Dypsis lutescens",
+    "location": "Living room",
+    "photo_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/Dypsis_lutescens.jpg/800px-Dypsis_lutescens.jpg",
+    "tags": ["indoor", "tropical", "air-purifying", "easy-care"],
+    "schedule": { "watering_every_days": 7 },
+    "care_log": [
+      { "type": "watering", "date": { "$date": "2025-03-28T08:00:00Z" }, "note": "" },
+      { "type": "repotting", "date": { "$date": "2025-03-01T08:00:00Z" }, "note": "Annual repot" }
+    ],
+    "added_on": { "$date": "2025-03-25T08:00:00Z" }
+  },
+
+
+
+
+  {
+    "name": "Curry Leaf",
+    "species": "Murraya koenigii",
+    "location": "Balcony",
+    "photo_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/Curry_leaf_tree.jpg/800px-Curry_leaf_tree.jpg",
+    "tags": ["outdoor", "herb", "edible", "medicinal", "bright-light"],
+    "schedule": { "watering_every_days": 3 },
+    "care_log": [
+      { "type": "watering", "date": { "$date": "2025-04-02T08:00:00Z" }, "note": "" },
+      { "type": "fertilizing", "date": { "$date": "2025-03-22T08:00:00Z" }, "note": "Organic compost" }
+    ],
+    "added_on": { "$date": "2025-03-27T08:00:00Z" }
+  }
