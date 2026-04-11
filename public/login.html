@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Plant Care — Login</title>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green-deep:   #1a3d2b;
+      --green-mid:    #2d6a4f;
+      --green-soft:   #52b788;
+      --green-pale:   #b7e4c7;
+      --green-mist:   #d8f3dc;
+      --cream:        #f8f5ef;
+      --cream-dark:   #ede8df;
+      --text-dark:    #1c2b22;
+      --text-muted:   #5a7a65;
+      --red-err:      #b5342a;
+      --red-err-bg:   #fcecea;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background-color: var(--cream);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Decorative botanical background blobs */
+    body::before {
+      content: '';
+      position: fixed;
+      top: -120px; right: -120px;
+      width: 420px; height: 420px;
+      background: radial-gradient(circle, var(--green-mist) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    body::after {
+      content: '';
+      position: fixed;
+      bottom: -100px; left: -100px;
+      width: 360px; height: 360px;
+      background: radial-gradient(circle, var(--green-pale) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 8px 40px rgba(44, 90, 60, 0.12);
+      width: 100%;
+      max-width: 420px;
+      padding: 2.8rem 2.4rem 2.6rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Leaf accent on top of card */
+    .leaf-accent {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.4rem;
+    }
+    .leaf-icon {
+      width: 52px; height: 52px;
+      background: var(--green-mist);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 26px;
+    }
+
+    h1 {
+      font-family: 'Lora', serif;
+      font-size: 1.65rem;
+      font-weight: 600;
+      color: var(--green-deep);
+      text-align: center;
+      letter-spacing: -0.3px;
+    }
+    .subtitle {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      text-align: center;
+      margin-top: 0.3rem;
+      margin-bottom: 2rem;
+      font-style: italic;
+      font-family: 'Lora', serif;
+    }
+
+    /* Tab switcher */
+    .tabs {
+      display: flex;
+      background: var(--cream-dark);
+      border-radius: 10px;
+      padding: 4px;
+      margin-bottom: 1.8rem;
+    }
+    .tab-btn {
+      flex: 1;
+      padding: 0.52rem 0;
+      border: none;
+      background: transparent;
+      border-radius: 7px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+    }
+    .tab-btn.active {
+      background: #fff;
+      color: var(--green-deep);
+      box-shadow: 0 1px 6px rgba(44,90,60,0.1);
+    }
+
+    /* Form panels */
+    .panel { display: none; }
+    .panel.visible { display: block; }
+
+    label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-bottom: 0.35rem;
+    }
+
+    input[type="text"],
+    input[type="password"] {
+      width: 100%;
+      padding: 0.72rem 1rem;
+      border: 1.5px solid var(--cream-dark);
+      border-radius: 10px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      color: var(--text-dark);
+      background: var(--cream);
+      outline: none;
+      transition: border-color 0.2s, background 0.2s;
+      margin-bottom: 1.1rem;
+    }
+    input[type="text"]:focus,
+    input[type="password"]:focus {
+      border-color: var(--green-soft);
+      background: #fff;
+    }
+    input[type="text"].error,
+    input[type="password"].error {
+      border-color: var(--red-err);
+    }
+
+    /* Error message box */
+    .error-box {
+      display: none;
+      background: var(--red-err-bg);
+      border: 1px solid #f3b8b5;
+      border-radius: 9px;
+      padding: 0.65rem 0.9rem;
+      font-size: 0.855rem;
+      color: var(--red-err);
+      margin-bottom: 1.2rem;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .error-box.show { display: flex; }
+    .error-box::before { content: '⚠'; font-size: 14px; flex-shrink: 0; }
+
+    /* Success box */
+    .success-box {
+      display: none;
+      background: var(--green-mist);
+      border: 1px solid var(--green-pale);
+      border-radius: 9px;
+      padding: 0.65rem 0.9rem;
+      font-size: 0.855rem;
+      color: var(--green-mid);
+      margin-bottom: 1.2rem;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .success-box.show { display: flex; }
+    .success-box::before { content: '✓'; font-size: 14px; flex-shrink: 0; font-weight: 700; }
+
+    /* Submit button */
+    .btn-primary {
+      width: 100%;
+      padding: 0.78rem;
+      background: var(--green-mid);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      letter-spacing: 0.2px;
+    }
+    .btn-primary:hover { background: var(--green-deep); }
+    .btn-primary:active { transform: scale(0.98); }
+
+    /* "Go to main app" link after login */
+    .app-link {
+      display: none;
+      text-align: center;
+      margin-top: 1.2rem;
+    }
+    .app-link.show { display: block; }
+    .app-link a {
+      color: var(--green-mid);
+      font-size: 0.9rem;
+      text-decoration: none;
+      font-weight: 500;
+      border-bottom: 1px solid var(--green-pale);
+      padding-bottom: 1px;
+      transition: color 0.2s;
+    }
+    .app-link a:hover { color: var(--green-deep); }
+
+    .divider {
+      display: flex; align-items: center; gap: 0.7rem;
+      margin: 0.2rem 0 1.3rem;
+      color: var(--cream-dark);
+    }
+    .divider hr { flex: 1; border: none; border-top: 1.5px solid var(--cream-dark); }
+    .divider span { font-size: 0.75rem; color: var(--text-muted); white-space: nowrap; }
+
+    .pw-wrap { position: relative; }
+    .pw-toggle {
+      position: absolute; right: 12px; top: 50%;
+      transform: translateY(-62%);
+      background: none; border: none; cursor: pointer;
+      color: var(--text-muted); font-size: 13px; padding: 2px 4px;
+    }
+    .pw-toggle:hover { color: var(--green-mid); }
+
+    .admin-hint {
+      text-align: center;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 1.2rem;
+    }
+    .admin-hint span {
+      background: var(--green-mist);
+      color: var(--green-mid);
+      border-radius: 5px;
+      padding: 1px 6px;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.78rem;
+      font-weight: 500;
+    }
+
+    /* Users stored in localStorage */
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="leaf-accent">
+      <div class="leaf-icon">🌿</div>
+    </div>
+    <h1>Plant Care</h1>
+    <p class="subtitle">your personal plant tracker</p>
+
+    <div class="tabs">
+      <button class="tab-btn active" id="tab-login" onclick="switchTab('login')">Log In</button>
+      <button class="tab-btn" id="tab-signup" onclick="switchTab('signup')">Sign Up</button>
+    </div>
+
+    <!-- LOGIN PANEL -->
+    <div class="panel visible" id="panel-login">
+      <div class="error-box" id="login-error">Incorrect username or password.</div>
+      <div class="success-box" id="login-success">Logged in! Redirecting...</div>
+
+      <label for="login-user">Username</label>
+      <input type="text" id="login-user" placeholder="e.g. Admin" autocomplete="username" />
+
+      <label for="login-pass">Password</label>
+      <div class="pw-wrap">
+        <input type="password" id="login-pass" placeholder="••••••••" autocomplete="current-password" />
+        <button class="pw-toggle" onclick="togglePw('login-pass', this)" tabindex="-1">Show</button>
+      </div>
+
+      <button class="btn-primary" onclick="handleLogin()">Log In</button>
+
+      <div class="app-link" id="login-app-link">
+        <a href="index.html">→ Go to your plants</a>
+      </div>
+
+      <div class="admin-hint">
+        Default admin: <span>Admin</span> / <span>admin123</span>
+      </div>
+    </div>
+
+    <!-- SIGNUP PANEL -->
+    <div class="panel" id="panel-signup">
+      <div class="error-box" id="signup-error">That username is already taken.</div>
+      <div class="success-box" id="signup-success">Account created! You can log in now.</div>
+
+      <label for="signup-user">Choose a username</label>
+      <input type="text" id="signup-user" placeholder="e.g. plantlover" autocomplete="username" />
+
+      <label for="signup-pass">Create password</label>
+      <div class="pw-wrap">
+        <input type="password" id="signup-pass" placeholder="min 6 characters" autocomplete="new-password" />
+        <button class="pw-toggle" onclick="togglePw('signup-pass', this)" tabindex="-1">Show</button>
+      </div>
+
+      <label for="signup-pass2">Confirm password</label>
+      <div class="pw-wrap">
+        <input type="password" id="signup-pass2" placeholder="••••••••" autocomplete="new-password" />
+        <button class="pw-toggle" onclick="togglePw('signup-pass2', this)" tabindex="-1">Show</button>
+      </div>
+
+      <button class="btn-primary" onclick="handleSignup()">Create Account</button>
+    </div>
+  </div>
+
+  <script>
+    // Seed the built-in Admin account on first load
+    function getUsers() {
+      const raw = localStorage.getItem('plantcare_users');
+      if (raw) return JSON.parse(raw);
+      const defaults = { Admin: 'admin123' };
+      localStorage.setItem('plantcare_users', JSON.stringify(defaults));
+      return defaults;
+    }
+    function saveUsers(users) {
+      localStorage.setItem('plantcare_users', JSON.stringify(users));
+    }
+
+    function switchTab(tab) {
+      document.getElementById('panel-login').classList.toggle('visible', tab === 'login');
+      document.getElementById('panel-signup').classList.toggle('visible', tab === 'signup');
+      document.getElementById('tab-login').classList.toggle('active', tab === 'login');
+      document.getElementById('tab-signup').classList.toggle('active', tab === 'signup');
+      clearErrors();
+    }
+
+    function clearErrors() {
+      ['login-error','login-success','signup-error','signup-success'].forEach(id => {
+        document.getElementById(id).classList.remove('show');
+      });
+      ['login-user','login-pass','signup-user','signup-pass','signup-pass2'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.remove('error');
+      });
+      document.getElementById('login-app-link').classList.remove('show');
+    }
+
+    function showError(id, inputIds = []) {
+      document.getElementById(id).classList.add('show');
+      inputIds.forEach(iid => {
+        const el = document.getElementById(iid);
+        if (el) el.classList.add('error');
+      });
+    }
+
+    function showSuccess(id) {
+      document.getElementById(id).classList.add('show');
+    }
+
+    function togglePw(inputId, btn) {
+      const el = document.getElementById(inputId);
+      if (el.type === 'password') { el.type = 'text'; btn.textContent = 'Hide'; }
+      else { el.type = 'password'; btn.textContent = 'Show'; }
+    }
+
+    function handleLogin() {
+      clearErrors();
+      const username = document.getElementById('login-user').value.trim();
+      const password = document.getElementById('login-pass').value;
+
+      if (!username || !password) {
+        showError('login-error', ['login-user', 'login-pass']);
+        document.getElementById('login-error').textContent = 'Please fill in both fields.';
+        return;
+      }
+
+      const users = getUsers();
+      if (users[username] && users[username] === password) {
+        showSuccess('login-success');
+        document.getElementById('login-app-link').classList.add('show');
+        // Redirect after a short delay so the user sees the success message
+        setTimeout(() => { window.location.href = 'index.html'; }, 1600);
+      } else {
+        document.getElementById('login-error').textContent = 'Incorrect username or password.';
+        showError('login-error', ['login-user', 'login-pass']);
+      }
+    }
+
+    function handleSignup() {
+      clearErrors();
+      const username = document.getElementById('signup-user').value.trim();
+      const pass     = document.getElementById('signup-pass').value;
+      const pass2    = document.getElementById('signup-pass2').value;
+      const errEl    = document.getElementById('signup-error');
+
+      if (!username) {
+        errEl.textContent = 'Please choose a username.';
+        showError('signup-error', ['signup-user']); return;
+      }
+      if (pass.length < 6) {
+        errEl.textContent = 'Password must be at least 6 characters.';
+        showError('signup-error', ['signup-pass']); return;
+      }
+      if (pass !== pass2) {
+        errEl.textContent = 'Passwords don\'t match — give it another try!';
+        showError('signup-error', ['signup-pass', 'signup-pass2']); return;
+      }
+
+      const users = getUsers();
+      if (users[username]) {
+        errEl.textContent = 'That username is already taken. Try another one!';
+        showError('signup-error', ['signup-user']); return;
+      }
+
+      users[username] = pass;
+      saveUsers(users);
+      showSuccess('signup-success');
+      document.getElementById('signup-user').value = '';
+      document.getElementById('signup-pass').value = '';
+      document.getElementById('signup-pass2').value = '';
+      setTimeout(() => switchTab('login'), 1800);
+    }
+
+    // Allow Enter key to submit
+    document.addEventListener('keydown', e => {
+      if (e.key !== 'Enter') return;
+      const loginVisible = document.getElementById('panel-login').classList.contains('visible');
+      if (loginVisible) handleLogin(); else handleSignup();
+    });
+  </script>
+</body>
+</html>
