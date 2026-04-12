@@ -393,7 +393,7 @@
         showSuccess('login-success');
         document.getElementById('login-app-link').classList.add('show');
         // Redirect after a short delay so the user sees the success message
-        setTimeout(() => { window.location.href = 'index.html'; }, 1600);
+        setTimeout(() => { window.location.href = 'app.html'; }, 1600);
       } else {
         document.getElementById('login-error').textContent = 'Incorrect username or password.';
         showError('login-error', ['login-user', 'login-pass']);
