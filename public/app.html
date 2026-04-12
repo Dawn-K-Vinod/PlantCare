@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Plant Care</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --green: #1D9E75;
+    --green-light: #E1F5EE;
+    --green-mid: #5DCAA5;
+    --green-dark: #085041;
+    --red: #E24B4A;
+    --red-light: #FCEBEB;
+    --amber: #BA7517;
+    --amber-light: #FAEEDA;
+    --purple: #534AB7;
+    --purple-light: #EEEDFE;
+    --text: #2C2C2A;
+    --text-muted: #5F5E5A;
+    --border: rgba(0,0,0,0.08);
+    --bg: #f4f3ee;
+    --card: #ffffff;
+    --radius: 14px;
+    --shadow: 0 2px 12px rgba(0,0,0,0.06);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --green: #5DCAA5;
+      --green-light: #04342C;
+      --green-mid: #1D9E75;
+      --green-dark: #9FE1CB;
+      --red: #F09595;
+      --red-light: #501313;
+      --amber: #EF9F27;
+      --amber-light: #412402;
+      --purple: #AFA9EC;
+      --purple-light: #26215C;
+      --text: #e8e6df;
+      --text-muted: #888780;
+      --border: rgba(255,255,255,0.08);
+      --bg: #1a1a18;
+      --card: #232320;
+      --shadow: 0 2px 12px rgba(0,0,0,0.3);
+    }
+  }
+
+  body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+  /* Header */
+  header {
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    padding: 0 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    box-shadow: var(--shadow);
+  }
+
+  .logo { display: flex; align-items: center; gap: 10px; }
+  .logo-icon { width: 32px; height: 32px; background: var(--green-light); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+  .logo h1 { font-size: 17px; font-weight: 600; color: var(--text); }
+  .logo span { font-size: 12px; color: var(--text-muted); margin-top: 1px; display: block; }
+
+  /* Buttons */
+  .btn { padding: 9px 18px; border-radius: 9px; border: none; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.15s; display: inline-flex; align-items: center; gap: 6px; }
+  .btn:hover { opacity: 0.88; transform: translateY(-1px); }
+  .btn:active { transform: translateY(0); }
+  .btn-primary { background: var(--green); color: #fff; }
+  .btn-sm { padding: 6px 13px; font-size: 13px; border-radius: 7px; }
+  .btn-ghost { background: transparent; border: 1px solid var(--border); color: var(--text-muted); }
+  .btn-danger { background: var(--red-light); color: var(--red); }
+  .btn-amber { background: var(--amber-light); color: var(--amber); }
+
+  /* Main layout */
+  main { max-width: 960px; margin: 0 auto; padding: 28px 20px; }
+
+  /* Search + controls */
+  .controls { display: flex; gap: 10px; margin-bottom: 18px; align-items: center; }
+  .search-wrap { position: relative; flex: 1; max-width: 320px; }
+  .search-wrap input {
+    width: 100%;
+    padding: 9px 12px 9px 36px;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    font-size: 14px;
+    background: var(--card);
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .search-wrap input:focus { border-color: var(--green); box-shadow: 0 0 0 3px rgba(29,158,117,0.1); }
+  .search-icon { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 14px; pointer-events: none; }
+
+  .stats-bar { display: flex; gap: 16px; margin-bottom: 18px; }
+  .stat { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 12px 18px; font-size: 13px; color: var(--text-muted); }
+  .stat strong { display: block; font-size: 22px; font-weight: 600; color: var(--text); line-height: 1.2; }
+  .stat.danger strong { color: var(--red); }
+
+  /* Tag filters */
+  .filter-section { margin-bottom: 22px; }
+  .filter-label { font-size: 12px; color: var(--text-muted); font-weight: 500; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .filter-bar { display: flex; gap: 6px; flex-wrap: wrap; }
+  .filter-btn { padding: 5px 14px; border-radius: 20px; border: 1px solid var(--border); background: var(--card); color: var(--text-muted); font-size: 13px; cursor: pointer; transition: all 0.15s; }
+  .filter-btn:hover { border-color: var(--green); color: var(--green); }
+  .filter-btn.active { background: var(--green); color: #fff; border-color: var(--green); }
+
+  /* Grid */
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(272px, 1fr)); gap: 18px; }
+
+  /* Card */
+  .card {
+    background: var(--card);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    overflow: hidden;
+    transition: transform 0.18s, box-shadow 0.18s;
+    cursor: pointer;
+    animation: fadeUp 0.25s ease both;
+    box-shadow: var(--shadow);
+  }
+  .card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.1); }
+  .card.overdue { border-top: 3px solid var(--red); }
+  .card.healthy { border-top: 3px solid var(--green); }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .card-photo { width: 100%; height: 140px; object-fit: cover; background: var(--green-light); display: flex; align-items: center; justify-content: center; font-size: 36px; }
+  .card-photo img { width: 100%; height: 100%; object-fit: cover; }
+  .card-photo.no-photo { background: linear-gradient(135deg, var(--green-light), var(--bg)); }
+
+  .card-body { padding: 16px; }
+  .card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+  .plant-name { font-size: 15px; font-weight: 600; }
+  .plant-species { font-size: 12px; color: var(--text-muted); margin-top: 2px; font-style: italic; }
+
+  .badge { font-size: 11px; font-weight: 500; padding: 3px 9px; border-radius: 20px; white-space: nowrap; }
+  .badge-overdue { background: var(--red-light); color: var(--red); }
+  .badge-ok { background: var(--green-light); color: var(--green-dark); }
+
+  .card-meta { font-size: 13px; color: var(--text-muted); margin-bottom: 12px; line-height: 1.7; }
+
+  /* Water progress bar */
+  .progress-wrap { margin-bottom: 12px; }
+  .progress-label { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted); margin-bottom: 4px; }
+  .progress-track { height: 5px; background: var(--border); border-radius: 99px; overflow: hidden; }
+  .progress-fill { height: 100%; border-radius: 99px; transition: width 0.4s ease; }
+  .progress-fill.ok { background: var(--green); }
+  .progress-fill.warn { background: var(--amber); }
+  .progress-fill.bad { background: var(--red); }
+
+  .tags { display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 14px; }
+  .tag { font-size: 11px; padding: 2px 9px; border-radius: 20px; background: var(--purple-light); color: var(--purple); cursor: pointer; transition: opacity 0.15s; }
+  .tag:hover { opacity: 0.75; }
+
+  .card-actions { display: flex; gap: 7px; }
+
+  /* Empty state */
+  .empty { text-align: center; padding: 80px 20px; color: var(--text-muted); grid-column: 1 / -1; }
+  .empty-icon { font-size: 48px; margin-bottom: 12px; }
+  .empty h3 { font-size: 16px; color: var(--text); margin-bottom: 6px; }
+  .empty p { font-size: 14px; }
+
+  /* Modal */
+  .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 100; align-items: center; justify-content: center; padding: 16px; }
+  .overlay.open { display: flex; }
+
+  .modal {
+    background: var(--card);
+    border-radius: 18px;
+    padding: 28px;
+    width: 100%;
+    max-width: 480px;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: slideUp 0.2s ease;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+  }
+  @keyframes slideUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+
+  .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 22px; }
+  .modal-header h2 { font-size: 18px; font-weight: 600; }
+  .close-btn { width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--border); background: transparent; color: var(--text-muted); cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; }
+  .close-btn:hover { background: var(--border); }
+
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .form-group { margin-bottom: 14px; }
+  .form-group label { display: block; font-size: 12px; font-weight: 500; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.04em; }
+  .form-group input, .form-group select, .form-group textarea {
+    width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 9px;
+    font-size: 14px; background: var(--bg); color: var(--text); outline: none; transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .form-group input:focus, .form-group select:focus { border-color: var(--green); box-shadow: 0 0 0 3px rgba(29,158,117,0.1); }
+
+  .modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 22px; padding-top: 16px; border-top: 1px solid var(--border); }
+
+  /* History */
+  .history-item { display: flex; align-items: flex-start; gap: 12px; padding: 11px 0; border-bottom: 1px solid var(--border); }
+  .history-item:last-child { border-bottom: none; }
+  .h-dot { width: 9px; height: 9px; border-radius: 50%; margin-top: 4px; flex-shrink: 0; }
+  .h-dot.watering { background: var(--green); }
+  .h-dot.fertilizing { background: var(--amber); }
+  .h-dot.repotting { background: var(--purple); }
+  .h-text { font-size: 14px; }
+  .h-note { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+  .h-date { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
+
+  .section-title { font-size: 12px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin: 18px 0 10px; }
+
+  .loading { text-align: center; padding: 60px; color: var(--text-muted); font-size: 14px; grid-column: 1/-1; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-icon">🌿</div>
+    <div>
+      <h1>Plant Care</h1>
+      <span>your personal plant tracker</span>
+    </div>
+  </div>
+  <button class="btn btn-primary" onclick="openAddModal()">+ Add plant</button>
+</header>
+
+<main>
+  <div class="stats-bar">
+    <div class="stat"><strong id="stat-total">—</strong>Total plants</div>
+    <div class="stat danger"><strong id="stat-overdue">—</strong>Need water</div>
+    <div class="stat"><strong id="stat-healthy">—</strong>All good</div>
+  </div>
+
+  <div class="controls">
+    <div class="search-wrap">
+      <span class="search-icon">⌕</span>
+      <input type="text" id="search" placeholder="Search plants..." oninput="renderPlants()"/>
+    </div>
+  </div>
+
+  <div class="filter-section">
+    <div class="filter-label">Filter by tag</div>
+    <div class="filter-bar" id="tagFilters"></div>
+  </div>
+
+  <div class="grid" id="grid"><div class="loading">Loading your plants...</div></div>
+</main>
+
+<!-- Add / Edit Plant Modal -->
+<div class="overlay" id="plantModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 id="modalTitle">Add a plant</h2>
+      <button class="close-btn" onclick="closeModal('plantModal')">✕</button>
+    </div>
+    <input type="hidden" id="edit-id"/>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Plant name *</label>
+        <input type="text" id="f-name" placeholder="e.g. Monstera"/>
+      </div>
+      <div class="form-group">
+        <label>Species</label>
+        <input type="text" id="f-species" placeholder="e.g. M. deliciosa"/>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Location</label>
+        <input type="text" id="f-location" placeholder="e.g. Living room"/>
+      </div>
+      <div class="form-group">
+        <label>Water every (days)</label>
+        <input type="number" id="f-water" value="3" min="1" max="60"/>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Tags (comma separated)</label>
+      <input type="text" id="f-tags" placeholder="e.g. indoor, tropical, low-light"/>
+    </div>
+    <div class="form-group">
+      <label>Photo URL (optional)</label>
+      <input type="text" id="f-photo" placeholder="https://..."/>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('plantModal')">Cancel</button>
+      <button class="btn btn-primary" id="saveBtn" onclick="savePlant()">Save plant</button>
+    </div>
+  </div>
+</div>
+
+<!-- Detail Modal -->
+<div class="overlay" id="detailModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 id="detail-name">Plant</h2>
+      <button class="close-btn" onclick="closeModal('detailModal')">✕</button>
+    </div>
+    <div id="detailContent"></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('detailModal')">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- Log Care Modal -->
+<div class="overlay" id="logModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>Log care</h2>
+      <button class="close-btn" onclick="closeModal('logModal')">✕</button>
+    </div>
+    <input type="hidden" id="log-plant-id"/>
+    <div class="form-group">
+      <label>Type</label>
+      <select id="log-type">
+        <option value="watering">Watering</option>
+        <option value="fertilizing">Fertilizing</option>
+        <option value="repotting">Repotting</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Note (optional)</label>
+      <input type="text" id="log-note" placeholder="e.g. Soil was very dry"/>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('logModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="submitLog()">Log it</button>
+    </div>
+  </div>
+</div>
+
+<script>
+let allPlants = [];
+let activeTag = 'all';
+
+async function loadPlants() {
+  try {
+    const res = await fetch('/api/plants');
+    allPlants = await res.json();
+    buildTagFilters();
+    updateStats();
+    renderPlants();
+  } catch (e) {
+    document.getElementById('grid').innerHTML = '<div class="loading">Could not connect to server.</div>';
+  }
+}
+
+function updateStats() {
+  document.getElementById('stat-total').textContent = allPlants.length;
+  document.getElementById('stat-overdue').textContent = allPlants.filter(p => p.overdue).length;
+  document.getElementById('stat-healthy').textContent = allPlants.filter(p => !p.overdue).length;
+}
+
+function buildTagFilters() {
+  const tags = new Set(['all']);
+  allPlants.forEach(p => p.tags.forEach(t => tags.add(t)));
+
+  const bar = document.getElementById('tagFilters');
+  bar.innerHTML = [...tags].map(t => `
+    <button class="filter-btn ${activeTag === t ? 'active' : ''}" onclick="setTag('${t}', this)">
+      ${t === 'all' ? 'All plants' : t}
+    </button>`).join('');
+}
+
+function setTag(t, btn) {
+  activeTag = t;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderPlants();
+}
+
+function renderPlants() {
+  const query = document.getElementById('search').value.toLowerCase().trim();
+  let plants = allPlants;
+
+  if (activeTag !== 'all') plants = plants.filter(p => p.tags.includes(activeTag));
+  if (query) plants = plants.filter(p => p.name.toLowerCase().includes(query) || (p.species || '').toLowerCase().includes(query));
+
+  const grid = document.getElementById('grid');
+  if (!plants.length) {
+    grid.innerHTML = `<div class="empty">
+      <div class="empty-icon">🌱</div>
+      <h3>No plants found</h3>
+      <p>${allPlants.length === 0 ? 'Add your first plant using the button above.' : 'Try a different search or filter.'}</p>
+    </div>`;
+    return;
+  }
+
+  grid.innerHTML = plants.map((p, i) => {
+    const prog = p.water_progress || 0;
+    const progClass = prog < 60 ? 'ok' : prog < 90 ? 'warn' : 'bad';
+    const waterText = p.days_since_watered !== null ? `${p.days_since_watered}d ago` : 'Never';
+
+    return `
+    <div class="card ${p.overdue ? 'overdue' : 'healthy'}" style="animation-delay:${i * 0.04}s" onclick="openDetail('${p._id}')">
+      <div class="card-photo ${p.photo_url ? '' : 'no-photo'}">
+        ${p.photo_url ? `<img src="${p.photo_url}" alt="${p.name}" onerror="this.parentElement.innerHTML='🌿'"/>` : '🌿'}
+      </div>
+      <div class="card-body">
+        <div class="card-top">
+          <div>
+            <div class="plant-name">${p.name}</div>
+            ${p.species ? `<div class="plant-species">${p.species}</div>` : ''}
+          </div>
+          <span class="badge ${p.overdue ? 'badge-overdue' : 'badge-ok'}">${p.overdue ? 'Needs water' : 'Healthy'}</span>
+        </div>
+
+        <div class="progress-wrap">
+          <div class="progress-label">
+            <span>Last watered: ${waterText}</span>
+            <span>every ${p.schedule.watering_every_days}d</span>
+          </div>
+          <div class="progress-track">
+            <div class="progress-fill ${progClass}" style="width:${prog}%"></div>
+          </div>
+        </div>
+
+        ${p.tags.length ? `<div class="tags">${p.tags.map(t =>
+          `<span class="tag" onclick="event.stopPropagation();setTagFromCard('${t}')">${t}</span>`
+        ).join('')}</div>` : ''}
+
+        ${p.location ? `<div class="card-meta">📍 ${p.location}</div>` : ''}
+
+        <div class="card-actions" onclick="event.stopPropagation()">
+          <button class="btn btn-sm btn-primary" onclick="openLog('${p._id}')">Log care</button>
+          <button class="btn btn-sm btn-ghost" onclick="openEdit('${p._id}')">Edit</button>
+          <button class="btn btn-sm btn-danger" onclick="deletePlant('${p._id}')">Delete</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function setTagFromCard(t) {
+  activeTag = t;
+  buildTagFilters();
+  renderPlants();
+}
+
+function openAddModal() {
+  document.getElementById('edit-id').value = '';
+  document.getElementById('modalTitle').textContent = 'Add a plant';
+  document.getElementById('saveBtn').textContent = 'Save plant';
+  ['f-name','f-species','f-location','f-tags','f-photo'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('f-water').value = 3;
+  document.getElementById('plantModal').classList.add('open');
+}
+
+function openEdit(id) {
+  const p = allPlants.find(x => x._id === id);
+  if (!p) return;
+  document.getElementById('edit-id').value = id;
+  document.getElementById('modalTitle').textContent = 'Edit plant';
+  document.getElementById('saveBtn').textContent = 'Save changes';
+  document.getElementById('f-name').value = p.name;
+  document.getElementById('f-species').value = p.species || '';
+  document.getElementById('f-location').value = p.location || '';
+  document.getElementById('f-tags').value = p.tags.join(', ');
+  document.getElementById('f-water').value = p.schedule.watering_every_days;
+  document.getElementById('f-photo').value = p.photo_url || '';
+  document.getElementById('plantModal').classList.add('open');
+}
+
+async function savePlant() {
+  const name = document.getElementById('f-name').value.trim();
+  if (!name) return alert('Plant name is required.');
+  const tags = document.getElementById('f-tags').value.split(',').map(t => t.trim()).filter(Boolean);
+  const body = {
+    name,
+    species: document.getElementById('f-species').value.trim(),
+    location: document.getElementById('f-location').value.trim(),
+    tags,
+    watering_every_days: document.getElementById('f-water').value,
+    photo_url: document.getElementById('f-photo').value.trim(),
+  };
+
+  const editId = document.getElementById('edit-id').value;
+  if (editId) {
+    await fetch(`/api/plants/${editId}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+  } else {
+    await fetch('/api/plants', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+  }
+  closeModal('plantModal');
+  loadPlants();
+}
+
+async function openDetail(id) {
+  const res = await fetch(`/api/plants/${id}`);
+  const p = await res.json();
+
+  const history = p.care_log.length
+    ? p.care_log.map(l => `
+        <div class="history-item">
+          <div class="h-dot ${l.type}"></div>
+          <div>
+            <div class="h-text">${l.type.charAt(0).toUpperCase() + l.type.slice(1)}</div>
+            ${l.note ? `<div class="h-note">${l.note}</div>` : ''}
+            <div class="h-date">${new Date(l.date).toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric' })}</div>
+          </div>
+        </div>`).join('')
+    : '<p style="color:var(--text-muted);font-size:14px;padding:8px 0">No care logged yet.</p>';
+
+  document.getElementById('detail-name').textContent = p.name;
+  document.getElementById('detailContent').innerHTML = `
+    ${p.species ? `<p style="color:var(--text-muted);font-size:13px;font-style:italic;margin-bottom:14px">${p.species}</p>` : ''}
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px">
+      ${p.location ? `<span class="badge badge-ok">📍 ${p.location}</span>` : ''}
+      <span class="badge" style="background:var(--purple-light);color:var(--purple)">Every ${p.schedule.watering_every_days} days</span>
+    </div>
+    ${p.tags.length ? `<div class="tags" style="margin-bottom:16px">${p.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>` : ''}
+    <div class="section-title">Care history</div>
+    ${history}
+  `;
+  document.getElementById('detailModal').classList.add('open');
+}
+
+function openLog(id) {
+  document.getElementById('log-plant-id').value = id;
+  document.getElementById('log-note').value = '';
+  document.getElementById('logModal').classList.add('open');
+}
+
+async function submitLog() {
+  const id = document.getElementById('log-plant-id').value;
+  const body = { type: document.getElementById('log-type').value, note: document.getElementById('log-note').value };
+  await fetch(`/api/plants/${id}/log`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+  closeModal('logModal');
+  loadPlants();
+}
+
+async function deletePlant(id) {
+  if (!confirm('Delete this plant?')) return;
+  await fetch(`/api/plants/${id}`, { method: 'DELETE' });
+  loadPlants();
+}
+
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+document.querySelectorAll('.overlay').forEach(o => o.addEventListener('click', e => { if (e.target === o) o.classList.remove('open'); }));
+
+loadPlants();
+</script>
+</body>
+</html>

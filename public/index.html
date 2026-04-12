@@ -1,555 +1,446 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Plant Care</title>
-<style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Plant Care — Login</title>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  :root {
-    --green: #1D9E75;
-    --green-light: #E1F5EE;
-    --green-mid: #5DCAA5;
-    --green-dark: #085041;
-    --red: #E24B4A;
-    --red-light: #FCEBEB;
-    --amber: #BA7517;
-    --amber-light: #FAEEDA;
-    --purple: #534AB7;
-    --purple-light: #EEEDFE;
-    --text: #2C2C2A;
-    --text-muted: #5F5E5A;
-    --border: rgba(0,0,0,0.08);
-    --bg: #f4f3ee;
-    --card: #ffffff;
-    --radius: 14px;
-    --shadow: 0 2px 12px rgba(0,0,0,0.06);
-  }
-
-  @media (prefers-color-scheme: dark) {
     :root {
-      --green: #5DCAA5;
-      --green-light: #04342C;
-      --green-mid: #1D9E75;
-      --green-dark: #9FE1CB;
-      --red: #F09595;
-      --red-light: #501313;
-      --amber: #EF9F27;
-      --amber-light: #412402;
-      --purple: #AFA9EC;
-      --purple-light: #26215C;
-      --text: #e8e6df;
-      --text-muted: #888780;
-      --border: rgba(255,255,255,0.08);
-      --bg: #1a1a18;
-      --card: #232320;
-      --shadow: 0 2px 12px rgba(0,0,0,0.3);
+      --green-deep:   #1a3d2b;
+      --green-mid:    #2d6a4f;
+      --green-soft:   #52b788;
+      --green-pale:   #b7e4c7;
+      --green-mist:   #d8f3dc;
+      --cream:        #f8f5ef;
+      --cream-dark:   #ede8df;
+      --text-dark:    #1c2b22;
+      --text-muted:   #5a7a65;
+      --red-err:      #b5342a;
+      --red-err-bg:   #fcecea;
     }
-  }
 
-  body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background-color: var(--cream);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem;
+      position: relative;
+      overflow: hidden;
+    }
 
-  /* Header */
-  header {
-    background: var(--card);
-    border-bottom: 1px solid var(--border);
-    padding: 0 28px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 64px;
-    position: sticky;
-    top: 0;
-    z-index: 10;
-    box-shadow: var(--shadow);
-  }
+    /* Decorative botanical background blobs */
+    body::before {
+      content: '';
+      position: fixed;
+      top: -120px; right: -120px;
+      width: 420px; height: 420px;
+      background: radial-gradient(circle, var(--green-mist) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    body::after {
+      content: '';
+      position: fixed;
+      bottom: -100px; left: -100px;
+      width: 360px; height: 360px;
+      background: radial-gradient(circle, var(--green-pale) 0%, transparent 70%);
+      pointer-events: none;
+    }
 
-  .logo { display: flex; align-items: center; gap: 10px; }
-  .logo-icon { width: 32px; height: 32px; background: var(--green-light); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
-  .logo h1 { font-size: 17px; font-weight: 600; color: var(--text); }
-  .logo span { font-size: 12px; color: var(--text-muted); margin-top: 1px; display: block; }
+    .card {
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 8px 40px rgba(44, 90, 60, 0.12);
+      width: 100%;
+      max-width: 420px;
+      padding: 2.8rem 2.4rem 2.6rem;
+      position: relative;
+      z-index: 1;
+    }
 
-  /* Buttons */
-  .btn { padding: 9px 18px; border-radius: 9px; border: none; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.15s; display: inline-flex; align-items: center; gap: 6px; }
-  .btn:hover { opacity: 0.88; transform: translateY(-1px); }
-  .btn:active { transform: translateY(0); }
-  .btn-primary { background: var(--green); color: #fff; }
-  .btn-sm { padding: 6px 13px; font-size: 13px; border-radius: 7px; }
-  .btn-ghost { background: transparent; border: 1px solid var(--border); color: var(--text-muted); }
-  .btn-danger { background: var(--red-light); color: var(--red); }
-  .btn-amber { background: var(--amber-light); color: var(--amber); }
+    /* Leaf accent on top of card */
+    .leaf-accent {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.4rem;
+    }
+    .leaf-icon {
+      width: 52px; height: 52px;
+      background: var(--green-mist);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 26px;
+    }
 
-  /* Main layout */
-  main { max-width: 960px; margin: 0 auto; padding: 28px 20px; }
+    h1 {
+      font-family: 'Lora', serif;
+      font-size: 1.65rem;
+      font-weight: 600;
+      color: var(--green-deep);
+      text-align: center;
+      letter-spacing: -0.3px;
+    }
+    .subtitle {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      text-align: center;
+      margin-top: 0.3rem;
+      margin-bottom: 2rem;
+      font-style: italic;
+      font-family: 'Lora', serif;
+    }
 
-  /* Search + controls */
-  .controls { display: flex; gap: 10px; margin-bottom: 18px; align-items: center; }
-  .search-wrap { position: relative; flex: 1; max-width: 320px; }
-  .search-wrap input {
-    width: 100%;
-    padding: 9px 12px 9px 36px;
-    border: 1px solid var(--border);
-    border-radius: 9px;
-    font-size: 14px;
-    background: var(--card);
-    color: var(--text);
-    outline: none;
-    transition: border-color 0.15s, box-shadow 0.15s;
-  }
-  .search-wrap input:focus { border-color: var(--green); box-shadow: 0 0 0 3px rgba(29,158,117,0.1); }
-  .search-icon { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 14px; pointer-events: none; }
+    /* Tab switcher */
+    .tabs {
+      display: flex;
+      background: var(--cream-dark);
+      border-radius: 10px;
+      padding: 4px;
+      margin-bottom: 1.8rem;
+    }
+    .tab-btn {
+      flex: 1;
+      padding: 0.52rem 0;
+      border: none;
+      background: transparent;
+      border-radius: 7px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+    }
+    .tab-btn.active {
+      background: #fff;
+      color: var(--green-deep);
+      box-shadow: 0 1px 6px rgba(44,90,60,0.1);
+    }
 
-  .stats-bar { display: flex; gap: 16px; margin-bottom: 18px; }
-  .stat { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 12px 18px; font-size: 13px; color: var(--text-muted); }
-  .stat strong { display: block; font-size: 22px; font-weight: 600; color: var(--text); line-height: 1.2; }
-  .stat.danger strong { color: var(--red); }
+    /* Form panels */
+    .panel { display: none; }
+    .panel.visible { display: block; }
 
-  /* Tag filters */
-  .filter-section { margin-bottom: 22px; }
-  .filter-label { font-size: 12px; color: var(--text-muted); font-weight: 500; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em; }
-  .filter-bar { display: flex; gap: 6px; flex-wrap: wrap; }
-  .filter-btn { padding: 5px 14px; border-radius: 20px; border: 1px solid var(--border); background: var(--card); color: var(--text-muted); font-size: 13px; cursor: pointer; transition: all 0.15s; }
-  .filter-btn:hover { border-color: var(--green); color: var(--green); }
-  .filter-btn.active { background: var(--green); color: #fff; border-color: var(--green); }
+    label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-bottom: 0.35rem;
+    }
 
-  /* Grid */
-  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(272px, 1fr)); gap: 18px; }
+    input[type="text"],
+    input[type="password"] {
+      width: 100%;
+      padding: 0.72rem 1rem;
+      border: 1.5px solid var(--cream-dark);
+      border-radius: 10px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      color: var(--text-dark);
+      background: var(--cream);
+      outline: none;
+      transition: border-color 0.2s, background 0.2s;
+      margin-bottom: 1.1rem;
+    }
+    input[type="text"]:focus,
+    input[type="password"]:focus {
+      border-color: var(--green-soft);
+      background: #fff;
+    }
+    input[type="text"].error,
+    input[type="password"].error {
+      border-color: var(--red-err);
+    }
 
-  /* Card */
-  .card {
-    background: var(--card);
-    border-radius: var(--radius);
-    border: 1px solid var(--border);
-    overflow: hidden;
-    transition: transform 0.18s, box-shadow 0.18s;
-    cursor: pointer;
-    animation: fadeUp 0.25s ease both;
-    box-shadow: var(--shadow);
-  }
-  .card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.1); }
-  .card.overdue { border-top: 3px solid var(--red); }
-  .card.healthy { border-top: 3px solid var(--green); }
+    /* Error message box */
+    .error-box {
+      display: none;
+      background: var(--red-err-bg);
+      border: 1px solid #f3b8b5;
+      border-radius: 9px;
+      padding: 0.65rem 0.9rem;
+      font-size: 0.855rem;
+      color: var(--red-err);
+      margin-bottom: 1.2rem;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .error-box.show { display: flex; }
+    .error-box::before { content: '⚠'; font-size: 14px; flex-shrink: 0; }
 
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(12px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
+    /* Success box */
+    .success-box {
+      display: none;
+      background: var(--green-mist);
+      border: 1px solid var(--green-pale);
+      border-radius: 9px;
+      padding: 0.65rem 0.9rem;
+      font-size: 0.855rem;
+      color: var(--green-mid);
+      margin-bottom: 1.2rem;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .success-box.show { display: flex; }
+    .success-box::before { content: '✓'; font-size: 14px; flex-shrink: 0; font-weight: 700; }
 
-  .card-photo { width: 100%; height: 140px; object-fit: cover; background: var(--green-light); display: flex; align-items: center; justify-content: center; font-size: 36px; }
-  .card-photo img { width: 100%; height: 100%; object-fit: cover; }
-  .card-photo.no-photo { background: linear-gradient(135deg, var(--green-light), var(--bg)); }
+    /* Submit button */
+    .btn-primary {
+      width: 100%;
+      padding: 0.78rem;
+      background: var(--green-mid);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      letter-spacing: 0.2px;
+    }
+    .btn-primary:hover { background: var(--green-deep); }
+    .btn-primary:active { transform: scale(0.98); }
 
-  .card-body { padding: 16px; }
-  .card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
-  .plant-name { font-size: 15px; font-weight: 600; }
-  .plant-species { font-size: 12px; color: var(--text-muted); margin-top: 2px; font-style: italic; }
+    /* "Go to main app" link after login */
+    .app-link {
+      display: none;
+      text-align: center;
+      margin-top: 1.2rem;
+    }
+    .app-link.show { display: block; }
+    .app-link a {
+      color: var(--green-mid);
+      font-size: 0.9rem;
+      text-decoration: none;
+      font-weight: 500;
+      border-bottom: 1px solid var(--green-pale);
+      padding-bottom: 1px;
+      transition: color 0.2s;
+    }
+    .app-link a:hover { color: var(--green-deep); }
 
-  .badge { font-size: 11px; font-weight: 500; padding: 3px 9px; border-radius: 20px; white-space: nowrap; }
-  .badge-overdue { background: var(--red-light); color: var(--red); }
-  .badge-ok { background: var(--green-light); color: var(--green-dark); }
+    .divider {
+      display: flex; align-items: center; gap: 0.7rem;
+      margin: 0.2rem 0 1.3rem;
+      color: var(--cream-dark);
+    }
+    .divider hr { flex: 1; border: none; border-top: 1.5px solid var(--cream-dark); }
+    .divider span { font-size: 0.75rem; color: var(--text-muted); white-space: nowrap; }
 
-  .card-meta { font-size: 13px; color: var(--text-muted); margin-bottom: 12px; line-height: 1.7; }
+    .pw-wrap { position: relative; }
+    .pw-toggle {
+      position: absolute; right: 12px; top: 50%;
+      transform: translateY(-62%);
+      background: none; border: none; cursor: pointer;
+      color: var(--text-muted); font-size: 13px; padding: 2px 4px;
+    }
+    .pw-toggle:hover { color: var(--green-mid); }
 
-  /* Water progress bar */
-  .progress-wrap { margin-bottom: 12px; }
-  .progress-label { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted); margin-bottom: 4px; }
-  .progress-track { height: 5px; background: var(--border); border-radius: 99px; overflow: hidden; }
-  .progress-fill { height: 100%; border-radius: 99px; transition: width 0.4s ease; }
-  .progress-fill.ok { background: var(--green); }
-  .progress-fill.warn { background: var(--amber); }
-  .progress-fill.bad { background: var(--red); }
+    .admin-hint {
+      text-align: center;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 1.2rem;
+    }
+    .admin-hint span {
+      background: var(--green-mist);
+      color: var(--green-mid);
+      border-radius: 5px;
+      padding: 1px 6px;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.78rem;
+      font-weight: 500;
+    }
 
-  .tags { display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 14px; }
-  .tag { font-size: 11px; padding: 2px 9px; border-radius: 20px; background: var(--purple-light); color: var(--purple); cursor: pointer; transition: opacity 0.15s; }
-  .tag:hover { opacity: 0.75; }
-
-  .card-actions { display: flex; gap: 7px; }
-
-  /* Empty state */
-  .empty { text-align: center; padding: 80px 20px; color: var(--text-muted); grid-column: 1 / -1; }
-  .empty-icon { font-size: 48px; margin-bottom: 12px; }
-  .empty h3 { font-size: 16px; color: var(--text); margin-bottom: 6px; }
-  .empty p { font-size: 14px; }
-
-  /* Modal */
-  .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 100; align-items: center; justify-content: center; padding: 16px; }
-  .overlay.open { display: flex; }
-
-  .modal {
-    background: var(--card);
-    border-radius: 18px;
-    padding: 28px;
-    width: 100%;
-    max-width: 480px;
-    max-height: 90vh;
-    overflow-y: auto;
-    animation: slideUp 0.2s ease;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
-  }
-  @keyframes slideUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
-
-  .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 22px; }
-  .modal-header h2 { font-size: 18px; font-weight: 600; }
-  .close-btn { width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--border); background: transparent; color: var(--text-muted); cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; }
-  .close-btn:hover { background: var(--border); }
-
-  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-  .form-group { margin-bottom: 14px; }
-  .form-group label { display: block; font-size: 12px; font-weight: 500; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.04em; }
-  .form-group input, .form-group select, .form-group textarea {
-    width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 9px;
-    font-size: 14px; background: var(--bg); color: var(--text); outline: none; transition: border-color 0.15s, box-shadow 0.15s;
-  }
-  .form-group input:focus, .form-group select:focus { border-color: var(--green); box-shadow: 0 0 0 3px rgba(29,158,117,0.1); }
-
-  .modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 22px; padding-top: 16px; border-top: 1px solid var(--border); }
-
-  /* History */
-  .history-item { display: flex; align-items: flex-start; gap: 12px; padding: 11px 0; border-bottom: 1px solid var(--border); }
-  .history-item:last-child { border-bottom: none; }
-  .h-dot { width: 9px; height: 9px; border-radius: 50%; margin-top: 4px; flex-shrink: 0; }
-  .h-dot.watering { background: var(--green); }
-  .h-dot.fertilizing { background: var(--amber); }
-  .h-dot.repotting { background: var(--purple); }
-  .h-text { font-size: 14px; }
-  .h-note { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
-  .h-date { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
-
-  .section-title { font-size: 12px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin: 18px 0 10px; }
-
-  .loading { text-align: center; padding: 60px; color: var(--text-muted); font-size: 14px; grid-column: 1/-1; }
-</style>
+    /* Users stored in localStorage */
+  </style>
 </head>
 <body>
-
-<header>
-  <div class="logo">
-    <div class="logo-icon">🌿</div>
-    <div>
-      <h1>Plant Care</h1>
-      <span>your personal plant tracker</span>
+  <div class="card">
+    <div class="leaf-accent">
+      <div class="leaf-icon">🌿</div>
     </div>
-  </div>
-  <button class="btn btn-primary" onclick="openAddModal()">+ Add plant</button>
-</header>
+    <h1>Plant Care</h1>
+    <p class="subtitle">your personal plant tracker</p>
 
-<main>
-  <div class="stats-bar">
-    <div class="stat"><strong id="stat-total">—</strong>Total plants</div>
-    <div class="stat danger"><strong id="stat-overdue">—</strong>Need water</div>
-    <div class="stat"><strong id="stat-healthy">—</strong>All good</div>
-  </div>
-
-  <div class="controls">
-    <div class="search-wrap">
-      <span class="search-icon">⌕</span>
-      <input type="text" id="search" placeholder="Search plants..." oninput="renderPlants()"/>
+    <div class="tabs">
+      <button class="tab-btn active" id="tab-login" onclick="switchTab('login')">Log In</button>
+      <button class="tab-btn" id="tab-signup" onclick="switchTab('signup')">Sign Up</button>
     </div>
-  </div>
 
-  <div class="filter-section">
-    <div class="filter-label">Filter by tag</div>
-    <div class="filter-bar" id="tagFilters"></div>
-  </div>
+    <!-- LOGIN PANEL -->
+    <div class="panel visible" id="panel-login">
+      <div class="error-box" id="login-error">Incorrect username or password.</div>
+      <div class="success-box" id="login-success">Logged in! Redirecting...</div>
 
-  <div class="grid" id="grid"><div class="loading">Loading your plants...</div></div>
-</main>
+      <label for="login-user">Username</label>
+      <input type="text" id="login-user" placeholder="e.g. Admin" autocomplete="username" />
 
-<!-- Add / Edit Plant Modal -->
-<div class="overlay" id="plantModal">
-  <div class="modal">
-    <div class="modal-header">
-      <h2 id="modalTitle">Add a plant</h2>
-      <button class="close-btn" onclick="closeModal('plantModal')">✕</button>
-    </div>
-    <input type="hidden" id="edit-id"/>
-    <div class="form-row">
-      <div class="form-group">
-        <label>Plant name *</label>
-        <input type="text" id="f-name" placeholder="e.g. Monstera"/>
+      <label for="login-pass">Password</label>
+      <div class="pw-wrap">
+        <input type="password" id="login-pass" placeholder="••••••••" autocomplete="current-password" />
+        <button class="pw-toggle" onclick="togglePw('login-pass', this)" tabindex="-1">Show</button>
       </div>
-      <div class="form-group">
-        <label>Species</label>
-        <input type="text" id="f-species" placeholder="e.g. M. deliciosa"/>
+
+      <button class="btn-primary" onclick="handleLogin()">Log In</button>
+
+      <div class="app-link" id="login-app-link">
+        <a href="index.html">→ Go to your plants</a>
+      </div>
+
+      <div class="admin-hint">
+        Default admin: <span>Admin</span> / <span>admin123</span>
       </div>
     </div>
-    <div class="form-row">
-      <div class="form-group">
-        <label>Location</label>
-        <input type="text" id="f-location" placeholder="e.g. Living room"/>
+
+    <!-- SIGNUP PANEL -->
+    <div class="panel" id="panel-signup">
+      <div class="error-box" id="signup-error">That username is already taken.</div>
+      <div class="success-box" id="signup-success">Account created! You can log in now.</div>
+
+      <label for="signup-user">Choose a username</label>
+      <input type="text" id="signup-user" placeholder="e.g. plantlover" autocomplete="username" />
+
+      <label for="signup-pass">Create password</label>
+      <div class="pw-wrap">
+        <input type="password" id="signup-pass" placeholder="min 6 characters" autocomplete="new-password" />
+        <button class="pw-toggle" onclick="togglePw('signup-pass', this)" tabindex="-1">Show</button>
       </div>
-      <div class="form-group">
-        <label>Water every (days)</label>
-        <input type="number" id="f-water" value="3" min="1" max="60"/>
+
+      <label for="signup-pass2">Confirm password</label>
+      <div class="pw-wrap">
+        <input type="password" id="signup-pass2" placeholder="••••••••" autocomplete="new-password" />
+        <button class="pw-toggle" onclick="togglePw('signup-pass2', this)" tabindex="-1">Show</button>
       </div>
-    </div>
-    <div class="form-group">
-      <label>Tags (comma separated)</label>
-      <input type="text" id="f-tags" placeholder="e.g. indoor, tropical, low-light"/>
-    </div>
-    <div class="form-group">
-      <label>Photo URL (optional)</label>
-      <input type="text" id="f-photo" placeholder="https://..."/>
-    </div>
-    <div class="modal-actions">
-      <button class="btn btn-ghost" onclick="closeModal('plantModal')">Cancel</button>
-      <button class="btn btn-primary" id="saveBtn" onclick="savePlant()">Save plant</button>
+
+      <button class="btn-primary" onclick="handleSignup()">Create Account</button>
     </div>
   </div>
-</div>
 
-<!-- Detail Modal -->
-<div class="overlay" id="detailModal">
-  <div class="modal">
-    <div class="modal-header">
-      <h2 id="detail-name">Plant</h2>
-      <button class="close-btn" onclick="closeModal('detailModal')">✕</button>
-    </div>
-    <div id="detailContent"></div>
-    <div class="modal-actions">
-      <button class="btn btn-ghost" onclick="closeModal('detailModal')">Close</button>
-    </div>
-  </div>
-</div>
+  <script>
+    // Seed the built-in Admin account on first load
+    function getUsers() {
+      const raw = localStorage.getItem('plantcare_users');
+      if (raw) return JSON.parse(raw);
+      const defaults = { Admin: 'admin123' };
+      localStorage.setItem('plantcare_users', JSON.stringify(defaults));
+      return defaults;
+    }
+    function saveUsers(users) {
+      localStorage.setItem('plantcare_users', JSON.stringify(users));
+    }
 
-<!-- Log Care Modal -->
-<div class="overlay" id="logModal">
-  <div class="modal">
-    <div class="modal-header">
-      <h2>Log care</h2>
-      <button class="close-btn" onclick="closeModal('logModal')">✕</button>
-    </div>
-    <input type="hidden" id="log-plant-id"/>
-    <div class="form-group">
-      <label>Type</label>
-      <select id="log-type">
-        <option value="watering">Watering</option>
-        <option value="fertilizing">Fertilizing</option>
-        <option value="repotting">Repotting</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label>Note (optional)</label>
-      <input type="text" id="log-note" placeholder="e.g. Soil was very dry"/>
-    </div>
-    <div class="modal-actions">
-      <button class="btn btn-ghost" onclick="closeModal('logModal')">Cancel</button>
-      <button class="btn btn-primary" onclick="submitLog()">Log it</button>
-    </div>
-  </div>
-</div>
+    function switchTab(tab) {
+      document.getElementById('panel-login').classList.toggle('visible', tab === 'login');
+      document.getElementById('panel-signup').classList.toggle('visible', tab === 'signup');
+      document.getElementById('tab-login').classList.toggle('active', tab === 'login');
+      document.getElementById('tab-signup').classList.toggle('active', tab === 'signup');
+      clearErrors();
+    }
 
-<script>
-let allPlants = [];
-let activeTag = 'all';
+    function clearErrors() {
+      ['login-error','login-success','signup-error','signup-success'].forEach(id => {
+        document.getElementById(id).classList.remove('show');
+      });
+      ['login-user','login-pass','signup-user','signup-pass','signup-pass2'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.remove('error');
+      });
+      document.getElementById('login-app-link').classList.remove('show');
+    }
 
-async function loadPlants() {
-  try {
-    const res = await fetch('/api/plants');
-    allPlants = await res.json();
-    buildTagFilters();
-    updateStats();
-    renderPlants();
-  } catch (e) {
-    document.getElementById('grid').innerHTML = '<div class="loading">Could not connect to server.</div>';
-  }
-}
+    function showError(id, inputIds = []) {
+      document.getElementById(id).classList.add('show');
+      inputIds.forEach(iid => {
+        const el = document.getElementById(iid);
+        if (el) el.classList.add('error');
+      });
+    }
 
-function updateStats() {
-  document.getElementById('stat-total').textContent = allPlants.length;
-  document.getElementById('stat-overdue').textContent = allPlants.filter(p => p.overdue).length;
-  document.getElementById('stat-healthy').textContent = allPlants.filter(p => !p.overdue).length;
-}
+    function showSuccess(id) {
+      document.getElementById(id).classList.add('show');
+    }
 
-function buildTagFilters() {
-  const tags = new Set(['all']);
-  allPlants.forEach(p => p.tags.forEach(t => tags.add(t)));
+    function togglePw(inputId, btn) {
+      const el = document.getElementById(inputId);
+      if (el.type === 'password') { el.type = 'text'; btn.textContent = 'Hide'; }
+      else { el.type = 'password'; btn.textContent = 'Show'; }
+    }
 
-  const bar = document.getElementById('tagFilters');
-  bar.innerHTML = [...tags].map(t => `
-    <button class="filter-btn ${activeTag === t ? 'active' : ''}" onclick="setTag('${t}', this)">
-      ${t === 'all' ? 'All plants' : t}
-    </button>`).join('');
-}
+    function handleLogin() {
+      clearErrors();
+      const username = document.getElementById('login-user').value.trim();
+      const password = document.getElementById('login-pass').value;
 
-function setTag(t, btn) {
-  activeTag = t;
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  renderPlants();
-}
+      if (!username || !password) {
+        showError('login-error', ['login-user', 'login-pass']);
+        document.getElementById('login-error').textContent = 'Please fill in both fields.';
+        return;
+      }
 
-function renderPlants() {
-  const query = document.getElementById('search').value.toLowerCase().trim();
-  let plants = allPlants;
+      const users = getUsers();
+      if (users[username] && users[username] === password) {
+        showSuccess('login-success');
+        document.getElementById('login-app-link').classList.add('show');
+        // Redirect after a short delay so the user sees the success message
+        setTimeout(() => { window.location.href = 'app.html'; }, 1600);
+      } else {
+        document.getElementById('login-error').textContent = 'Incorrect username or password.';
+        showError('login-error', ['login-user', 'login-pass']);
+      }
+    }
 
-  if (activeTag !== 'all') plants = plants.filter(p => p.tags.includes(activeTag));
-  if (query) plants = plants.filter(p => p.name.toLowerCase().includes(query) || (p.species || '').toLowerCase().includes(query));
+    function handleSignup() {
+      clearErrors();
+      const username = document.getElementById('signup-user').value.trim();
+      const pass     = document.getElementById('signup-pass').value;
+      const pass2    = document.getElementById('signup-pass2').value;
+      const errEl    = document.getElementById('signup-error');
 
-  const grid = document.getElementById('grid');
-  if (!plants.length) {
-    grid.innerHTML = `<div class="empty">
-      <div class="empty-icon">🌱</div>
-      <h3>No plants found</h3>
-      <p>${allPlants.length === 0 ? 'Add your first plant using the button above.' : 'Try a different search or filter.'}</p>
-    </div>`;
-    return;
-  }
+      if (!username) {
+        errEl.textContent = 'Please choose a username.';
+        showError('signup-error', ['signup-user']); return;
+      }
+      if (pass.length < 6) {
+        errEl.textContent = 'Password must be at least 6 characters.';
+        showError('signup-error', ['signup-pass']); return;
+      }
+      if (pass !== pass2) {
+        errEl.textContent = 'Passwords don\'t match — give it another try!';
+        showError('signup-error', ['signup-pass', 'signup-pass2']); return;
+      }
 
-  grid.innerHTML = plants.map((p, i) => {
-    const prog = p.water_progress || 0;
-    const progClass = prog < 60 ? 'ok' : prog < 90 ? 'warn' : 'bad';
-    const waterText = p.days_since_watered !== null ? `${p.days_since_watered}d ago` : 'Never';
+      const users = getUsers();
+      if (users[username]) {
+        errEl.textContent = 'That username is already taken. Try another one!';
+        showError('signup-error', ['signup-user']); return;
+      }
 
-    return `
-    <div class="card ${p.overdue ? 'overdue' : 'healthy'}" style="animation-delay:${i * 0.04}s" onclick="openDetail('${p._id}')">
-      <div class="card-photo ${p.photo_url ? '' : 'no-photo'}">
-        ${p.photo_url ? `<img src="${p.photo_url}" alt="${p.name}" onerror="this.parentElement.innerHTML='🌿'"/>` : '🌿'}
-      </div>
-      <div class="card-body">
-        <div class="card-top">
-          <div>
-            <div class="plant-name">${p.name}</div>
-            ${p.species ? `<div class="plant-species">${p.species}</div>` : ''}
-          </div>
-          <span class="badge ${p.overdue ? 'badge-overdue' : 'badge-ok'}">${p.overdue ? 'Needs water' : 'Healthy'}</span>
-        </div>
+      users[username] = pass;
+      saveUsers(users);
+      showSuccess('signup-success');
+      document.getElementById('signup-user').value = '';
+      document.getElementById('signup-pass').value = '';
+      document.getElementById('signup-pass2').value = '';
+      setTimeout(() => switchTab('login'), 1800);
+    }
 
-        <div class="progress-wrap">
-          <div class="progress-label">
-            <span>Last watered: ${waterText}</span>
-            <span>every ${p.schedule.watering_every_days}d</span>
-          </div>
-          <div class="progress-track">
-            <div class="progress-fill ${progClass}" style="width:${prog}%"></div>
-          </div>
-        </div>
-
-        ${p.tags.length ? `<div class="tags">${p.tags.map(t =>
-          `<span class="tag" onclick="event.stopPropagation();setTagFromCard('${t}')">${t}</span>`
-        ).join('')}</div>` : ''}
-
-        ${p.location ? `<div class="card-meta">📍 ${p.location}</div>` : ''}
-
-        <div class="card-actions" onclick="event.stopPropagation()">
-          <button class="btn btn-sm btn-primary" onclick="openLog('${p._id}')">Log care</button>
-          <button class="btn btn-sm btn-ghost" onclick="openEdit('${p._id}')">Edit</button>
-          <button class="btn btn-sm btn-danger" onclick="deletePlant('${p._id}')">Delete</button>
-        </div>
-      </div>
-    </div>`;
-  }).join('');
-}
-
-function setTagFromCard(t) {
-  activeTag = t;
-  buildTagFilters();
-  renderPlants();
-}
-
-function openAddModal() {
-  document.getElementById('edit-id').value = '';
-  document.getElementById('modalTitle').textContent = 'Add a plant';
-  document.getElementById('saveBtn').textContent = 'Save plant';
-  ['f-name','f-species','f-location','f-tags','f-photo'].forEach(id => document.getElementById(id).value = '');
-  document.getElementById('f-water').value = 3;
-  document.getElementById('plantModal').classList.add('open');
-}
-
-function openEdit(id) {
-  const p = allPlants.find(x => x._id === id);
-  if (!p) return;
-  document.getElementById('edit-id').value = id;
-  document.getElementById('modalTitle').textContent = 'Edit plant';
-  document.getElementById('saveBtn').textContent = 'Save changes';
-  document.getElementById('f-name').value = p.name;
-  document.getElementById('f-species').value = p.species || '';
-  document.getElementById('f-location').value = p.location || '';
-  document.getElementById('f-tags').value = p.tags.join(', ');
-  document.getElementById('f-water').value = p.schedule.watering_every_days;
-  document.getElementById('f-photo').value = p.photo_url || '';
-  document.getElementById('plantModal').classList.add('open');
-}
-
-async function savePlant() {
-  const name = document.getElementById('f-name').value.trim();
-  if (!name) return alert('Plant name is required.');
-  const tags = document.getElementById('f-tags').value.split(',').map(t => t.trim()).filter(Boolean);
-  const body = {
-    name,
-    species: document.getElementById('f-species').value.trim(),
-    location: document.getElementById('f-location').value.trim(),
-    tags,
-    watering_every_days: document.getElementById('f-water').value,
-    photo_url: document.getElementById('f-photo').value.trim(),
-  };
-
-  const editId = document.getElementById('edit-id').value;
-  if (editId) {
-    await fetch(`/api/plants/${editId}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
-  } else {
-    await fetch('/api/plants', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
-  }
-  closeModal('plantModal');
-  loadPlants();
-}
-
-async function openDetail(id) {
-  const res = await fetch(`/api/plants/${id}`);
-  const p = await res.json();
-
-  const history = p.care_log.length
-    ? p.care_log.map(l => `
-        <div class="history-item">
-          <div class="h-dot ${l.type}"></div>
-          <div>
-            <div class="h-text">${l.type.charAt(0).toUpperCase() + l.type.slice(1)}</div>
-            ${l.note ? `<div class="h-note">${l.note}</div>` : ''}
-            <div class="h-date">${new Date(l.date).toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric' })}</div>
-          </div>
-        </div>`).join('')
-    : '<p style="color:var(--text-muted);font-size:14px;padding:8px 0">No care logged yet.</p>';
-
-  document.getElementById('detail-name').textContent = p.name;
-  document.getElementById('detailContent').innerHTML = `
-    ${p.species ? `<p style="color:var(--text-muted);font-size:13px;font-style:italic;margin-bottom:14px">${p.species}</p>` : ''}
-    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px">
-      ${p.location ? `<span class="badge badge-ok">📍 ${p.location}</span>` : ''}
-      <span class="badge" style="background:var(--purple-light);color:var(--purple)">Every ${p.schedule.watering_every_days} days</span>
-    </div>
-    ${p.tags.length ? `<div class="tags" style="margin-bottom:16px">${p.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>` : ''}
-    <div class="section-title">Care history</div>
-    ${history}
-  `;
-  document.getElementById('detailModal').classList.add('open');
-}
-
-function openLog(id) {
-  document.getElementById('log-plant-id').value = id;
-  document.getElementById('log-note').value = '';
-  document.getElementById('logModal').classList.add('open');
-}
-
-async function submitLog() {
-  const id = document.getElementById('log-plant-id').value;
-  const body = { type: document.getElementById('log-type').value, note: document.getElementById('log-note').value };
-  await fetch(`/api/plants/${id}/log`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
-  closeModal('logModal');
-  loadPlants();
-}
-
-async function deletePlant(id) {
-  if (!confirm('Delete this plant?')) return;
-  await fetch(`/api/plants/${id}`, { method: 'DELETE' });
-  loadPlants();
-}
-
-function closeModal(id) { document.getElementById(id).classList.remove('open'); }
-
-document.querySelectorAll('.overlay').forEach(o => o.addEventListener('click', e => { if (e.target === o) o.classList.remove('open'); }));
-
-loadPlants();
-</script>
+    // Allow Enter key to submit
+    document.addEventListener('keydown', e => {
+      if (e.key !== 'Enter') return;
+      const loginVisible = document.getElementById('panel-login').classList.contains('visible');
+      if (loginVisible) handleLogin(); else handleSignup();
+    });
+  </script>
 </body>
 </html>
