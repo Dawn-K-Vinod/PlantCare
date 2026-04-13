@@ -10,7 +10,7 @@ router.get('/', async (req, res) => {
   try {
     const db = await connectDB();
     const plants = await db.collection('plants')
-      .find({ user_id: req.user.userId })
+      .find({ user_id: new ObjectId(req.user.userId) })
       .sort({ added_on: -1 })
       .toArray();
 
@@ -41,7 +41,7 @@ router.post('/', async (req, res) => {
   try {
     const db = await connectDB();
     const plant = {
-      user_id: req.user.userId,
+      user_id: new ObjectId(req.user.userId),
       name: req.body.name,
       species: req.body.species || '',
       location: req.body.location || '',
@@ -74,7 +74,7 @@ router.put('/:id', async (req, res) => {
       },
     };
     await db.collection('plants').updateOne(
-      { _id: new ObjectId(req.params.id), user_id: req.user.userId },
+      { _id: new ObjectId(req.params.id), user_id: new ObjectId(req.user.userId) },
       { $set: updates }
     );
     res.json({ success: true });
@@ -92,7 +92,7 @@ router.post('/:id/log', async (req, res) => {
       note: req.body.note || '',
     };
     await db.collection('plants').updateOne(
-      { _id: new ObjectId(req.params.id), user_id: req.user.userId },
+      { _id: new ObjectId(req.params.id), user_id: new ObjectId(req.user.userId) },
       { $push: { care_log: entry } }
     );
     res.json({ success: true, entry });
@@ -106,7 +106,7 @@ router.get('/:id', async (req, res) => {
     const db = await connectDB();
     const plant = await db.collection('plants').findOne({
       _id: new ObjectId(req.params.id),
-      user_id: req.user.userId
+      user_id: new ObjectId(req.user.userId)
     });
     if (!plant) return res.status(404).json({ error: 'Plant not found' });
     plant.care_log.sort((a, b) => new Date(b.date) - new Date(a.date));
@@ -121,7 +121,7 @@ router.delete('/:id', async (req, res) => {
     const db = await connectDB();
     await db.collection('plants').deleteOne({
       _id: new ObjectId(req.params.id),
-      user_id: req.user.userId
+      user_id: new ObjectId(req.user.userId)
     });
     res.json({ success: true });
   } catch (err) {
