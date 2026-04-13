@@ -50,7 +50,89 @@
 
   body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
 
-  /* Header */
+  /* Auth screen */
+  .auth-screen {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  .auth-card {
+    background: var(--card);
+    border-radius: 20px;
+    padding: 40px 36px;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.12);
+    border: 1px solid var(--border);
+    animation: slideUp 0.25s ease;
+  }
+
+  .auth-logo {
+    text-align: center;
+    margin-bottom: 28px;
+  }
+
+  .auth-logo-icon {
+    width: 56px;
+    height: 56px;
+    background: var(--green-light);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    margin: 0 auto 12px;
+  }
+
+  .auth-logo h1 { font-size: 20px; font-weight: 700; margin-bottom: 4px; }
+  .auth-logo p { font-size: 13px; color: var(--text-muted); }
+
+  .auth-tabs {
+    display: flex;
+    background: var(--bg);
+    border-radius: 10px;
+    padding: 4px;
+    margin-bottom: 24px;
+  }
+
+  .auth-tab {
+    flex: 1;
+    padding: 8px;
+    border: none;
+    border-radius: 7px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    background: transparent;
+    color: var(--text-muted);
+    transition: all 0.15s;
+  }
+
+  .auth-tab.active {
+    background: var(--card);
+    color: var(--text);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  }
+
+  .auth-error {
+    background: var(--red-light);
+    color: var(--red);
+    font-size: 13px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    display: none;
+  }
+
+  .auth-error.show { display: block; }
+
+  /* App screen */
+  .app-screen { display: none; }
+  .app-screen.show { display: block; }
+
   header {
     background: var(--card);
     border-bottom: 1px solid var(--border);
@@ -67,10 +149,12 @@
 
   .logo { display: flex; align-items: center; gap: 10px; }
   .logo-icon { width: 32px; height: 32px; background: var(--green-light); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
-  .logo h1 { font-size: 17px; font-weight: 600; color: var(--text); }
-  .logo span { font-size: 12px; color: var(--text-muted); margin-top: 1px; display: block; }
+  .logo h1 { font-size: 17px; font-weight: 600; }
+  .logo span { font-size: 12px; color: var(--text-muted); display: block; }
 
-  /* Buttons */
+  .header-right { display: flex; align-items: center; gap: 10px; }
+  .welcome-text { font-size: 13px; color: var(--text-muted); }
+
   .btn { padding: 9px 18px; border-radius: 9px; border: none; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.15s; display: inline-flex; align-items: center; gap: 6px; }
   .btn:hover { opacity: 0.88; transform: translateY(-1px); }
   .btn:active { transform: translateY(0); }
@@ -78,25 +162,13 @@
   .btn-sm { padding: 6px 13px; font-size: 13px; border-radius: 7px; }
   .btn-ghost { background: transparent; border: 1px solid var(--border); color: var(--text-muted); }
   .btn-danger { background: var(--red-light); color: var(--red); }
-  .btn-amber { background: var(--amber-light); color: var(--amber); }
+  .btn-logout { background: transparent; border: 1px solid var(--border); color: var(--text-muted); font-size: 13px; padding: 6px 14px; border-radius: 8px; }
 
-  /* Main layout */
   main { max-width: 960px; margin: 0 auto; padding: 28px 20px; }
 
-  /* Search + controls */
   .controls { display: flex; gap: 10px; margin-bottom: 18px; align-items: center; }
   .search-wrap { position: relative; flex: 1; max-width: 320px; }
-  .search-wrap input {
-    width: 100%;
-    padding: 9px 12px 9px 36px;
-    border: 1px solid var(--border);
-    border-radius: 9px;
-    font-size: 14px;
-    background: var(--card);
-    color: var(--text);
-    outline: none;
-    transition: border-color 0.15s, box-shadow 0.15s;
-  }
+  .search-wrap input { width: 100%; padding: 9px 12px 9px 36px; border: 1px solid var(--border); border-radius: 9px; font-size: 14px; background: var(--card); color: var(--text); outline: none; transition: border-color 0.15s, box-shadow 0.15s; }
   .search-wrap input:focus { border-color: var(--green); box-shadow: 0 0 0 3px rgba(29,158,117,0.1); }
   .search-icon { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 14px; pointer-events: none; }
 
@@ -105,7 +177,6 @@
   .stat strong { display: block; font-size: 22px; font-weight: 600; color: var(--text); line-height: 1.2; }
   .stat.danger strong { color: var(--red); }
 
-  /* Tag filters */
   .filter-section { margin-bottom: 22px; }
   .filter-label { font-size: 12px; color: var(--text-muted); font-weight: 500; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em; }
   .filter-bar { display: flex; gap: 6px; flex-wrap: wrap; }
@@ -113,28 +184,15 @@
   .filter-btn:hover { border-color: var(--green); color: var(--green); }
   .filter-btn.active { background: var(--green); color: #fff; border-color: var(--green); }
 
-  /* Grid */
   .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(272px, 1fr)); gap: 18px; }
 
-  /* Card */
-  .card {
-    background: var(--card);
-    border-radius: var(--radius);
-    border: 1px solid var(--border);
-    overflow: hidden;
-    transition: transform 0.18s, box-shadow 0.18s;
-    cursor: pointer;
-    animation: fadeUp 0.25s ease both;
-    box-shadow: var(--shadow);
-  }
+  .card { background: var(--card); border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; transition: transform 0.18s, box-shadow 0.18s; cursor: pointer; animation: fadeUp 0.25s ease both; box-shadow: var(--shadow); }
   .card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.1); }
   .card.overdue { border-top: 3px solid var(--red); }
   .card.healthy { border-top: 3px solid var(--green); }
 
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(12px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes slideUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
 
   .card-photo { width: 100%; height: 140px; object-fit: cover; background: var(--green-light); display: flex; align-items: center; justify-content: center; font-size: 36px; }
   .card-photo img { width: 100%; height: 100%; object-fit: cover; }
@@ -151,7 +209,6 @@
 
   .card-meta { font-size: 13px; color: var(--text-muted); margin-bottom: 12px; line-height: 1.7; }
 
-  /* Water progress bar */
   .progress-wrap { margin-bottom: 12px; }
   .progress-label { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted); margin-bottom: 4px; }
   .progress-track { height: 5px; background: var(--border); border-radius: 99px; overflow: hidden; }
@@ -166,28 +223,15 @@
 
   .card-actions { display: flex; gap: 7px; }
 
-  /* Empty state */
   .empty { text-align: center; padding: 80px 20px; color: var(--text-muted); grid-column: 1 / -1; }
   .empty-icon { font-size: 48px; margin-bottom: 12px; }
   .empty h3 { font-size: 16px; color: var(--text); margin-bottom: 6px; }
   .empty p { font-size: 14px; }
 
-  /* Modal */
   .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 100; align-items: center; justify-content: center; padding: 16px; }
   .overlay.open { display: flex; }
 
-  .modal {
-    background: var(--card);
-    border-radius: 18px;
-    padding: 28px;
-    width: 100%;
-    max-width: 480px;
-    max-height: 90vh;
-    overflow-y: auto;
-    animation: slideUp 0.2s ease;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
-  }
-  @keyframes slideUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+  .modal { background: var(--card); border-radius: 18px; padding: 28px; width: 100%; max-width: 480px; max-height: 90vh; overflow-y: auto; animation: slideUp 0.2s ease; box-shadow: 0 20px 60px rgba(0,0,0,0.2); }
 
   .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 22px; }
   .modal-header h2 { font-size: 18px; font-weight: 600; }
@@ -197,15 +241,11 @@
   .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
   .form-group { margin-bottom: 14px; }
   .form-group label { display: block; font-size: 12px; font-weight: 500; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.04em; }
-  .form-group input, .form-group select, .form-group textarea {
-    width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 9px;
-    font-size: 14px; background: var(--bg); color: var(--text); outline: none; transition: border-color 0.15s, box-shadow 0.15s;
-  }
+  .form-group input, .form-group select { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 9px; font-size: 14px; background: var(--bg); color: var(--text); outline: none; transition: border-color 0.15s, box-shadow 0.15s; }
   .form-group input:focus, .form-group select:focus { border-color: var(--green); box-shadow: 0 0 0 3px rgba(29,158,117,0.1); }
 
   .modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 22px; padding-top: 16px; border-top: 1px solid var(--border); }
 
-  /* History */
   .history-item { display: flex; align-items: flex-start; gap: 12px; padding: 11px 0; border-bottom: 1px solid var(--border); }
   .history-item:last-child { border-bottom: none; }
   .h-dot { width: 9px; height: 9px; border-radius: 50%; margin-top: 4px; flex-shrink: 0; }
@@ -215,46 +255,79 @@
   .h-text { font-size: 14px; }
   .h-note { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
   .h-date { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
-
   .section-title { font-size: 12px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin: 18px 0 10px; }
-
   .loading { text-align: center; padding: 60px; color: var(--text-muted); font-size: 14px; grid-column: 1/-1; }
 </style>
 </head>
 <body>
 
-<header>
-  <div class="logo">
-    <div class="logo-icon">🌿</div>
-    <div>
+<!-- Auth Screen -->
+<div class="auth-screen" id="authScreen">
+  <div class="auth-card">
+    <div class="auth-logo">
+      <div class="auth-logo-icon">🌿</div>
       <h1>Plant Care</h1>
-      <span>your personal plant tracker</span>
+      <p>Your personal plant tracker</p>
     </div>
-  </div>
-  <button class="btn btn-primary" onclick="openAddModal()">+ Add plant</button>
-</header>
 
-<main>
-  <div class="stats-bar">
-    <div class="stat"><strong id="stat-total">—</strong>Total plants</div>
-    <div class="stat danger"><strong id="stat-overdue">—</strong>Need water</div>
-    <div class="stat"><strong id="stat-healthy">—</strong>All good</div>
-  </div>
-
-  <div class="controls">
-    <div class="search-wrap">
-      <span class="search-icon">⌕</span>
-      <input type="text" id="search" placeholder="Search plants..." oninput="renderPlants()"/>
+    <div class="auth-tabs">
+      <button class="auth-tab active" onclick="switchTab('login')">Login</button>
+      <button class="auth-tab" onclick="switchTab('register')">Register</button>
     </div>
-  </div>
 
-  <div class="filter-section">
-    <div class="filter-label">Filter by tag</div>
-    <div class="filter-bar" id="tagFilters"></div>
-  </div>
+    <div class="auth-error" id="authError"></div>
 
-  <div class="grid" id="grid"><div class="loading">Loading your plants...</div></div>
-</main>
+    <div class="form-group">
+      <label>Username</label>
+      <input type="text" id="auth-username" placeholder="Enter username" autocomplete="username"/>
+    </div>
+    <div class="form-group">
+      <label>Password</label>
+      <input type="password" id="auth-password" placeholder="Enter password" autocomplete="current-password" onkeydown="if(event.key==='Enter') submitAuth()"/>
+    </div>
+
+    <button class="btn btn-primary" style="width:100%;justify-content:center;margin-top:4px" onclick="submitAuth()" id="authBtn">Login</button>
+  </div>
+</div>
+
+<!-- App Screen -->
+<div class="app-screen" id="appScreen">
+  <header>
+    <div class="logo">
+      <div class="logo-icon">🌿</div>
+      <div>
+        <h1>Plant Care</h1>
+        <span id="welcomeText">Welcome</span>
+      </div>
+    </div>
+    <div class="header-right">
+      <button class="btn btn-primary btn-sm" onclick="openAddModal()">+ Add plant</button>
+      <button class="btn-logout btn" onclick="logout()">Logout</button>
+    </div>
+  </header>
+
+  <main>
+    <div class="stats-bar">
+      <div class="stat"><strong id="stat-total">—</strong>Total plants</div>
+      <div class="stat danger"><strong id="stat-overdue">—</strong>Need water</div>
+      <div class="stat"><strong id="stat-healthy">—</strong>All good</div>
+    </div>
+
+    <div class="controls">
+      <div class="search-wrap">
+        <span class="search-icon">⌕</span>
+        <input type="text" id="search" placeholder="Search plants..." oninput="renderPlants()"/>
+      </div>
+    </div>
+
+    <div class="filter-section">
+      <div class="filter-label">Filter by tag</div>
+      <div class="filter-bar" id="tagFilters"></div>
+    </div>
+
+    <div class="grid" id="grid"><div class="loading">Loading your plants...</div></div>
+  </main>
+</div>
 
 <!-- Add / Edit Plant Modal -->
 <div class="overlay" id="plantModal">
@@ -343,16 +416,93 @@
 <script>
 let allPlants = [];
 let activeTag = 'all';
+let currentTab = 'login';
+let token = localStorage.getItem('token');
+let username = localStorage.getItem('username');
+
+function api(url, options = {}) {
+  return fetch(url, {
+    ...options,
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
+      ...(options.headers || {})
+    }
+  });
+}
+
+function switchTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.auth-tab').forEach((t, i) => {
+    t.classList.toggle('active', (i === 0 && tab === 'login') || (i === 1 && tab === 'register'));
+  });
+  document.getElementById('authBtn').textContent = tab === 'login' ? 'Login' : 'Create account';
+  document.getElementById('authError').classList.remove('show');
+}
+
+async function submitAuth() {
+  const username = document.getElementById('auth-username').value.trim();
+  const password = document.getElementById('auth-password').value;
+  const errorEl = document.getElementById('authError');
+  errorEl.classList.remove('show');
+
+  if (!username || !password) {
+    errorEl.textContent = 'Please fill in both fields.';
+    errorEl.classList.add('show');
+    return;
+  }
+
+  const endpoint = currentTab === 'login' ? '/api/auth/login' : '/api/auth/register';
+  try {
+    const res = await fetch(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password })
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      errorEl.textContent = data.error;
+      errorEl.classList.add('show');
+      return;
+    }
+    token = data.token;
+    localStorage.setItem('token', token);
+    localStorage.setItem('username', data.username);
+    showApp(data.username);
+  } catch {
+    errorEl.textContent = 'Could not connect to server.';
+    errorEl.classList.add('show');
+  }
+}
+
+function showApp(user) {
+  document.getElementById('authScreen').style.display = 'none';
+  document.getElementById('appScreen').classList.add('show');
+  document.getElementById('welcomeText').textContent = `Hello, ${user}`;
+  loadPlants();
+}
+
+function logout() {
+  localStorage.removeItem('token');
+  localStorage.removeItem('username');
+  token = null;
+  allPlants = [];
+  document.getElementById('authScreen').style.display = 'flex';
+  document.getElementById('appScreen').classList.remove('show');
+  document.getElementById('auth-username').value = '';
+  document.getElementById('auth-password').value = '';
+}
 
 async function loadPlants() {
   try {
-    const res = await fetch('/api/plants');
+    const res = await api('/api/plants');
+    if (res.status === 401) { logout(); return; }
     allPlants = await res.json();
     buildTagFilters();
     updateStats();
     renderPlants();
-  } catch (e) {
-    document.getElementById('grid').innerHTML = '<div class="loading">Could not connect to server.</div>';
+  } catch {
+    document.getElementById('grid').innerHTML = '<div class="loading">Could not load plants.</div>';
   }
 }
 
@@ -365,7 +515,6 @@ function updateStats() {
 function buildTagFilters() {
   const tags = new Set(['all']);
   allPlants.forEach(p => p.tags.forEach(t => tags.add(t)));
-
   const bar = document.getElementById('tagFilters');
   bar.innerHTML = [...tags].map(t => `
     <button class="filter-btn ${activeTag === t ? 'active' : ''}" onclick="setTag('${t}', this)">
@@ -383,7 +532,6 @@ function setTag(t, btn) {
 function renderPlants() {
   const query = document.getElementById('search').value.toLowerCase().trim();
   let plants = allPlants;
-
   if (activeTag !== 'all') plants = plants.filter(p => p.tags.includes(activeTag));
   if (query) plants = plants.filter(p => p.name.toLowerCase().includes(query) || (p.species || '').toLowerCase().includes(query));
 
@@ -401,7 +549,6 @@ function renderPlants() {
     const prog = p.water_progress || 0;
     const progClass = prog < 60 ? 'ok' : prog < 90 ? 'warn' : 'bad';
     const waterText = p.days_since_watered !== null ? `${p.days_since_watered}d ago` : 'Never';
-
     return `
     <div class="card ${p.overdue ? 'overdue' : 'healthy'}" style="animation-delay:${i * 0.04}s" onclick="openDetail('${p._id}')">
       <div class="card-photo ${p.photo_url ? '' : 'no-photo'}">
@@ -415,7 +562,6 @@ function renderPlants() {
           </div>
           <span class="badge ${p.overdue ? 'badge-overdue' : 'badge-ok'}">${p.overdue ? 'Needs water' : 'Healthy'}</span>
         </div>
-
         <div class="progress-wrap">
           <div class="progress-label">
             <span>Last watered: ${waterText}</span>
@@ -425,13 +571,8 @@ function renderPlants() {
             <div class="progress-fill ${progClass}" style="width:${prog}%"></div>
           </div>
         </div>
-
-        ${p.tags.length ? `<div class="tags">${p.tags.map(t =>
-          `<span class="tag" onclick="event.stopPropagation();setTagFromCard('${t}')">${t}</span>`
-        ).join('')}</div>` : ''}
-
+        ${p.tags.length ? `<div class="tags">${p.tags.map(t => `<span class="tag" onclick="event.stopPropagation();setTagFromCard('${t}')">${t}</span>`).join('')}</div>` : ''}
         ${p.location ? `<div class="card-meta">📍 ${p.location}</div>` : ''}
-
         <div class="card-actions" onclick="event.stopPropagation()">
           <button class="btn btn-sm btn-primary" onclick="openLog('${p._id}')">Log care</button>
           <button class="btn btn-sm btn-ghost" onclick="openEdit('${p._id}')">Edit</button>
@@ -442,11 +583,7 @@ function renderPlants() {
   }).join('');
 }
 
-function setTagFromCard(t) {
-  activeTag = t;
-  buildTagFilters();
-  renderPlants();
-}
+function setTagFromCard(t) { activeTag = t; buildTagFilters(); renderPlants(); }
 
 function openAddModal() {
   document.getElementById('edit-id').value = '';
@@ -484,21 +621,19 @@ async function savePlant() {
     watering_every_days: document.getElementById('f-water').value,
     photo_url: document.getElementById('f-photo').value.trim(),
   };
-
   const editId = document.getElementById('edit-id').value;
   if (editId) {
-    await fetch(`/api/plants/${editId}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+    await api(`/api/plants/${editId}`, { method: 'PUT', body: JSON.stringify(body) });
   } else {
-    await fetch('/api/plants', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+    await api('/api/plants', { method: 'POST', body: JSON.stringify(body) });
   }
   closeModal('plantModal');
   loadPlants();
 }
 
 async function openDetail(id) {
-  const res = await fetch(`/api/plants/${id}`);
+  const res = await api(`/api/plants/${id}`);
   const p = await res.json();
-
   const history = p.care_log.length
     ? p.care_log.map(l => `
         <div class="history-item">
@@ -534,22 +669,25 @@ function openLog(id) {
 async function submitLog() {
   const id = document.getElementById('log-plant-id').value;
   const body = { type: document.getElementById('log-type').value, note: document.getElementById('log-note').value };
-  await fetch(`/api/plants/${id}/log`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+  await api(`/api/plants/${id}/log`, { method: 'POST', body: JSON.stringify(body) });
   closeModal('logModal');
   loadPlants();
 }
 
 async function deletePlant(id) {
   if (!confirm('Delete this plant?')) return;
-  await fetch(`/api/plants/${id}`, { method: 'DELETE' });
+  await api(`/api/plants/${id}`, { method: 'DELETE' });
   loadPlants();
 }
 
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
-
 document.querySelectorAll('.overlay').forEach(o => o.addEventListener('click', e => { if (e.target === o) o.classList.remove('open'); }));
 
-loadPlants();
+if (token) {
+  showApp(username || 'there');
+} else {
+  document.getElementById('authScreen').style.display = 'flex';
+}
 </script>
 </body>
 </html>

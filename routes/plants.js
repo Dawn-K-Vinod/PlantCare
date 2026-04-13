@@ -1,16 +1,20 @@
-// NOTE: Authentication middleware is intentionally excluded for scope.
-// The schema supports multi-user via user_id field on each plant document.
 const express = require('express');
 const router = express.Router();
 const connectDB = require('../db');
 const { ObjectId } = require('mongodb');
+const authMiddleware = require('../middleware/auth');
+
+router.use(authMiddleware);
 
 router.get('/', async (req, res) => {
   try {
     const db = await connectDB();
-    const plants = await db.collection('plants').find().sort({ added_on: -1 }).toArray();
-    const today = new Date();
+    const plants = await db.collection('plants')
+      .find({ user_id: req.user.userId })
+      .sort({ added_on: -1 })
+      .toArray();
 
+    const today = new Date();
     const withStatus = plants.map(plant => {
       const lastWatered = plant.care_log
         .filter(l => l.type === 'watering')
@@ -37,6 +41,7 @@ router.post('/', async (req, res) => {
   try {
     const db = await connectDB();
     const plant = {
+      user_id: req.user.userId,
       name: req.body.name,
       species: req.body.species || '',
       location: req.body.location || '',
@@ -55,7 +60,6 @@ router.post('/', async (req, res) => {
   }
 });
 
-// Edit a plant
 router.put('/:id', async (req, res) => {
   try {
     const db = await connectDB();
@@ -70,7 +74,7 @@ router.put('/:id', async (req, res) => {
       },
     };
     await db.collection('plants').updateOne(
-      { _id: new ObjectId(req.params.id) },
+      { _id: new ObjectId(req.params.id), user_id: req.user.userId },
       { $set: updates }
     );
     res.json({ success: true });
@@ -88,7 +92,7 @@ router.post('/:id/log', async (req, res) => {
       note: req.body.note || '',
     };
     await db.collection('plants').updateOne(
-      { _id: new ObjectId(req.params.id) },
+      { _id: new ObjectId(req.params.id), user_id: req.user.userId },
       { $push: { care_log: entry } }
     );
     res.json({ success: true, entry });
@@ -100,7 +104,10 @@ router.post('/:id/log', async (req, res) => {
 router.get('/:id', async (req, res) => {
   try {
     const db = await connectDB();
-    const plant = await db.collection('plants').findOne({ _id: new ObjectId(req.params.id) });
+    const plant = await db.collection('plants').findOne({
+      _id: new ObjectId(req.params.id),
+      user_id: req.user.userId
+    });
     if (!plant) return res.status(404).json({ error: 'Plant not found' });
     plant.care_log.sort((a, b) => new Date(b.date) - new Date(a.date));
     res.json(plant);
@@ -112,7 +119,10 @@ router.get('/:id', async (req, res) => {
 router.delete('/:id', async (req, res) => {
   try {
     const db = await connectDB();
-    await db.collection('plants').deleteOne({ _id: new ObjectId(req.params.id) });
+    await db.collection('plants').deleteOne({
+      _id: new ObjectId(req.params.id),
+      user_id: req.user.userId
+    });
     res.json({ success: true });
   } catch (err) {
     res.status(500).json({ error: err.message });
